@@ -17,6 +17,12 @@ Install python dependencies.
 poetry install
 ```
 
+Activate virtual environment.
+
+```bash
+poetry shell
+```
+
 Upload your code to your ESP32 board.
 
 ```bash
