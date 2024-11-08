@@ -1,0 +1,73 @@
+esphome:
+  name: esphome
+
+esp32:
+  board: esp32dev
+  framework:
+    type: esp-idf
+    version: recommended
+
+api:
+
+logger:
+  level: INFO
+
+wifi:
+  ssid: !secret wifissid
+  password: !secret wifipwd
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    update_interval: 60s
+    entity_category: "diagnostic"
+  - platform: esp32_hall
+    name: "Hall Sensor"
+    update_interval: 60s
+  - platform: bmp280_i2c
+    temperature:
+      name: "BMP280 Temperature"
+    pressure:
+      name: "BMP280 Pressure"
+    address: 0x76
+
+light:
+  - platform: binary
+    name: "ESP32 Led"
+    output: internal_led
+
+output:
+  - platform: gpio
+    pin: GPIO2
+    id: internal_led
+
+display:
+  - platform: ssd1306_i2c
+    model: "SSD1306 128x64"
+    address: 0x3C
+    lambda: |-
+      it.printf(64, 0, id(jet1), TextAlign::TOP_CENTER, "Esphome");
+      it.strftime(64, 64, id(jet2), TextAlign::BOTTOM_CENTER, "%H:%M", id(esptime).now());
+
+i2c:
+  sda: GPIO21
+  scl: GPIO22
+  scan: false
+  frequency: 400kHz
+
+font:
+  - file: "fonts/JetBrainsMono-Regular.ttf"
+    id: jet1
+    size: 12
+  - file: "fonts/JetBrainsMono-Regular.ttf"
+    id: jet2
+    size: 36
+
+time:
+  - platform: homeassistant
+    id: esptime
+# mqtt:
+#   broker: 192.168.0.10
+#   port: 1883
+#   discovery: false
+#   log_topic: null
