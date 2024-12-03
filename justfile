@@ -1,5 +1,5 @@
 run:
-    esphome run main.yaml
+    poetry run esphome run main.yaml
 
 compile:
-    esphome compile main.yaml
+    poetry run esphome compile main.yaml
